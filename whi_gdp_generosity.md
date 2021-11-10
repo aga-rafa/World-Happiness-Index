@@ -380,7 +380,7 @@ vif(ols)
     ##   1.000004   1.000004
 
 ``` r
-#VIF is 1 - very good (low multicolinearity, as expected)
+#VIF is 1 (low multicolinearity, as expected)
 ```
 
 OLS estimates show a high correlation between GDP\_log and Generosity
@@ -523,66 +523,6 @@ effects model.
 whi_2012 = whi[with(whi, year >= 2012), ]
 ```
 
-\#Models Stargazer
-
-``` r
-m1 <- lm(WHI ~ Generosity, data = whi)
-m2 <- lm(WHI ~ Generosity + GDP_log, data = whi)
-m3 <- plm(WHI ~ Generosity + GDP_log + country, data = whi)
-m4 <- plm(WHI ~ Generosity + GDP_log + country + year,
-                       index = c("country"),
-                       model = "within",
-                       effect = "twoways", 
-                       data = whi)
-m5 <- plm(WHI ~ Generosity + GDP_log + country + year,
-          index = c("country"),
-          model = "within",
-          effect = "twoways", 
-          data = whi_2012)
-rob_se <- list(sqrt(diag(vcovHC(m1, type = "HC1"))),
-               sqrt(diag(vcovHC(m2, type = "HC1"))),
-               sqrt(diag(vcovHC(m3, type = "HC1"))),
-               sqrt(diag(vcovHC(m4, type = "HC1"))),
-               sqrt(diag(vcovHC(m4, type = "HC1"))))
-# generate the table
-stargazer(m1,m2,m3,m4,m5, 
-          digits = 3,
-          header = FALSE,
-          type = "html", 
-          se = rob_se,
-          title = "Linear Panel Regression Models of Happiness Index",
-          model.numbers = FALSE,
-          column.labels = c("(1)", "(2)", "(3)", "(4)", "(5)"))
-```
-
-    ## 
-    ## <table style="text-align:center"><caption><strong>Linear Panel Regression Models of Happiness Index</strong></caption>
-    ## <tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="5"><em>Dependent variable:</em></td></tr>
-    ## <tr><td></td><td colspan="5" style="border-bottom: 1px solid black"></td></tr>
-    ## <tr><td style="text-align:left"></td><td colspan="5">WHI</td></tr>
-    ## <tr><td style="text-align:left"></td><td colspan="2"><em>OLS</em></td><td colspan="3"><em>panel</em></td></tr>
-    ## <tr><td style="text-align:left"></td><td colspan="2"><em></em></td><td colspan="3"><em>linear</em></td></tr>
-    ## <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td></tr>
-    ## <tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Generosity</td><td>1.302<sup>***</sup></td><td>1.312<sup>***</sup></td><td>0.520<sup>**</sup></td><td>0.505<sup>**</sup></td><td>0.572<sup>***</sup></td></tr>
-    ## <tr><td style="text-align:left"></td><td>(0.167)</td><td>(0.099)</td><td>(0.206)</td><td>(0.208)</td><td>(0.208)</td></tr>
-    ## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td><td></td></tr>
-    ## <tr><td style="text-align:left">GDP_log</td><td></td><td>0.764<sup>***</sup></td><td>1.041<sup>***</sup></td><td>1.222<sup>***</sup></td><td>1.485<sup>***</sup></td></tr>
-    ## <tr><td style="text-align:left"></td><td></td><td>(0.012)</td><td>(0.171)</td><td>(0.220)</td><td>(0.220)</td></tr>
-    ## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td><td></td></tr>
-    ## <tr><td style="text-align:left">year</td><td></td><td></td><td></td><td>-0.018</td><td>0.023</td></tr>
-    ## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td>(0.020)</td><td>(0.020)</td></tr>
-    ## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td><td></td></tr>
-    ## <tr><td style="text-align:left">Constant</td><td>5.452<sup>***</sup></td><td>-1.687<sup>***</sup></td><td></td><td></td><td></td></tr>
-    ## <tr><td style="text-align:left"></td><td>(0.025)</td><td>(0.114)</td><td></td><td></td><td></td></tr>
-    ## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td><td></td></tr>
-    ## <tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>1,859</td><td>1,859</td><td>1,859</td><td>1,859</td><td>1,187</td></tr>
-    ## <tr><td style="text-align:left">R<sup>2</sup></td><td>0.036</td><td>0.659</td><td>0.105</td><td>0.087</td><td>0.086</td></tr>
-    ## <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.035</td><td>0.659</td><td>0.019</td><td>-0.010</td><td>-0.064</td></tr>
-    ## <tr><td style="text-align:left">Residual Std. Error</td><td>1.095 (df = 1857)</td><td>0.651 (df = 1856)</td><td></td><td></td><td></td></tr>
-    ## <tr><td style="text-align:left">F Statistic</td><td>69.110<sup>***</sup> (df = 1; 1857)</td><td>1,797.266<sup>***</sup> (df = 2; 1856)</td><td>99.033<sup>***</sup> (df = 2; 1696)</td><td>53.086<sup>***</sup> (df = 3; 1681)</td><td>32.078<sup>***</sup> (df = 3; 1018)</td></tr>
-    ## <tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="5" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
-    ## </table>
-
 \#Dickey-Fuller test to check for stochastic trends
 
 ``` r
@@ -615,3 +555,5 @@ adf.test(Panel.set$WHI, k=2)
 No unit-roots are present as p &lt; 0.05. This means that the model does
 not suffer from sazonality issues, and that the fixed effects model can
 be considered reliable.
+
+Accordingly to my analysis, GDP and Generosity are both correlated with changes in the level of Happiness per country. 
