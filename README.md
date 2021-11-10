@@ -1,1 +1,2 @@
-# gdp_whi
+# World Happiness Index 
+## A fixed effects approach using R
