@@ -145,7 +145,7 @@ sam
     ## 16  2020     95
 
 ``` r
-#Delete 2005, only 1 country was sampled. 
+#Delete 2005, only 27 countries were sampled (results are robust to the inclusion of this year though). 
 whi = whi[with(whi, year > 2005), ]
 ```
 
@@ -161,11 +161,12 @@ num_var<-whi %>%
 
 ``` r
 # add median values for GDP_log and Generosity
-combined2_whi<- whi %>% group_by(country) %>%
+med_whi<- whi %>% group_by(country) %>%
   mutate(med_freedom = median(GDP_log), 
          med_corrupt = median(Generosity), 
          med_cor_ctr = median(Life_exp),
          med_cor_ctr = median(Corruption))
+med_whi
 ```
 
 ## EDA
@@ -341,7 +342,7 @@ ggplot(whi, aes(x=year, y = Generosity))+
 ![](whi_gdp_generosity_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
 
 ``` r
-#little effects over time for overall sample
+# small effects over time for sampled countrie on average
 ```
 
 \#OLS and Fixed Effects Model Analysis
